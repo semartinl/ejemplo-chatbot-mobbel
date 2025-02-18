@@ -1,0 +1,11 @@
+sentence_transformers
+pandas
+numpy
+scikit-learn
+typing
+nltk
+datetime
+transformers
+bitsandbytes
+sentence_transformers
+flask

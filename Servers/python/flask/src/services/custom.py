@@ -3,13 +3,18 @@ import time
 import json
 
 class Custom:
-    def chat(self, body):
+    def chat(self, body, chatbot):
         # Text messages are stored inside request body using the Deep Chat JSON format:
         # https://deepchat.dev/docs/connect
         print(body)
         # Sends response back to Deep Chat using the Response format:
         # https://deepchat.dev/docs/connect/#Response
-        return {"text": "This is a respone from a Flask server. Thank you for your message!"}
+
+        consulta = body["messages"][-1]["text"]
+        print(f"Consulta: {consulta}")
+        respuesta = chatbot.generate_response(query=consulta)
+        print(f"Respuesta: {respuesta}")
+        return {"text": respuesta}
 
     def chat_stream(self, body):
         # Text messages are stored inside request body using the Deep Chat JSON format:

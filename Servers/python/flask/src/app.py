@@ -7,10 +7,35 @@ from services.cohere import Cohere
 from flask import Flask, request
 from dotenv import load_dotenv
 from flask_cors import CORS
-
+from models.ChatbotRAG import ChatbotRAG
+from models.DialogueController import DialogueController
+from models.ResponseGenerator import ResponseGenerator
+from models.SemanticSearch import SemanticSearchEnhancer
+from services.huggingFace import loginHuggingFace
+import torch
+import nltk
+import pandas as pd
 # ------------------ SETUP ------------------
 
 load_dotenv()
+loginHuggingFace()
+# CHATBOT_MODEL = os.getenv("CHATBOT_MODEL")
+device = ("cuda" if torch.cuda.is_available() else "cpu")
+SYSTEM_PROMPT = "Quiero que te comportes como un asistente virtual"
+CONTROLLER = DialogueController(assistant_token="<|assistant|>", system_prompt=SYSTEM_PROMPT)
+
+# Descarga de recursos necesarios
+nltk.download('punkt', quiet=True)
+nltk.download('punkt_tab', quiet=True)
+nltk.download('stopwords', quiet=True)
+SEMANTIC_SEARCH = SemanticSearchEnhancer()
+
+datos_pandas = pd.read_json("datos.json")
+SEMANTIC_SEARCH.prepare_data(datos_pandas)
+print("Datos preparados")
+print(datos_pandas)
+RESPONSE_ENGINE = ResponseGenerator()
+CHATBOT = ChatbotRAG(controller=CONTROLLER, device_setup=device,response_engine=RESPONSE_ENGINE, semantic_search=SEMANTIC_SEARCH)
 
 app = Flask(__name__)
 
@@ -38,7 +63,7 @@ custom = Custom()
 @app.route("/chat", methods=["POST"])
 def chat():
     body = request.json
-    return custom.chat(body)
+    return custom.chat(body, CHATBOT)
 
 @app.route("/chat-stream", methods=["POST"])
 def chat_stream():

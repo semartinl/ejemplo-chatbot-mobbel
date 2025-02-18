@@ -1,0 +1,55 @@
+[
+    {
+      "question": "¿Qué soluciones ofrece Mobbeel para la verificación de identidad digital?",
+      "answer": "Mobbeel ofrece soluciones de verificación de identidad digital como onboarding digital (eKYC/AML), firma biométrica, autenticación biométrica y prevención del fraude."
+    },
+    {
+      "question": "¿En qué sectores opera Mobbeel?",
+      "answer": "Mobbeel opera en sectores como el financiero, telecomunicaciones, juego online, turismo y sector público."
+    },
+    {
+      "question": "¿Cómo ayuda Mobbeel a cumplir con normativas?",
+      "answer": "Mobbeel ayuda a las empresas a cumplir con normativas como KYC, AML, eIDAS, GDPR, EBA, SEPBLAC, ENS, IA Act y NIST."
+    },
+    {
+      "question": "¿Qué tecnologías utiliza Mobbeel para prevenir fraudes?",
+      "answer": "Mobbeel emplea reconocimiento facial, detección de ataques de presentación, detección de deepfakes, detección de ataques de inyección y manipulación de documentos de identidad."
+    },
+    {
+      "question": "¿Cómo mejora Mobbeel la experiencia del usuario?",
+      "answer": "Mobbeel mejora la experiencia del usuario mediante automatización de procesos, auto-llenado de formularios y biometría para evitar contraseñas."
+    },
+    {
+      "question": "¿Qué ventajas ofrece Mobbeel en términos de escalabilidad?",
+      "answer": "Mobbeel permite la automatización del proceso de verificación de identidad, reduciendo la revisión manual y permitiendo a las empresas escalar operaciones eficientemente."
+    },
+    {
+      "question": "¿Cómo se integran las soluciones de Mobbeel en otros sistemas?",
+      "answer": "Las soluciones de Mobbeel son flexibles y modulares, integrándose mediante SDKs nativas o híbridas, un gateway web o APIs."
+    },
+    {
+      "question": "¿Qué certificaciones de seguridad tiene Mobbeel?",
+      "answer": "Mobbeel cuenta con la certificación ISO 27001 en seguridad de la información."
+    },
+    {
+      "question": "¿Cuántos años de experiencia tiene Mobbeel en el sector?",
+      "answer": "Mobbeel tiene más de 14 años de experiencia en verificación de identidad digital."
+    },
+    {
+      "question": "¿En cuántos países opera Mobbeel?",
+      "answer": "Mobbeel opera en más de 30 países y ha verificado millones de identidades."
+    },
+    {
+      "question": "¿Cuánto tiempo toma integrar las soluciones de Mobbeel?",
+      "answer": "La integración puede tomar desde unas pocas horas hasta un par de días, dependiendo del entorno."
+    },
+    {
+      "question": "¿Qué opciones de personalización ofrece Mobbeel?",
+      "answer": "Mobbeel permite personalización en idiomas, colores, fuentes e imágenes."
+    },
+    {
+      "question": "¿Qué dicen los clientes sobre Mobbeel?",
+      "answer": "Clientes como FIATC Seguros e IDI Eikon destacan la agilidad, facilidad de integración y mejora en la experiencia del usuario."
+    }
+
+]
