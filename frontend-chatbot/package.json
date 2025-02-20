@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@huggingface/inference": "^3.3.5",
     "deep-chat-react": "^2.1.1",
     "frontend-chatbot": "file:",
+    "huggingface": "^1.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.1.5"
