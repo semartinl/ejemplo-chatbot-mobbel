@@ -4,9 +4,8 @@ from huggingface_hub import login
 # Make sure to set the HUGGING_FACE_API_KEY environment variable in a .env file (create if does not exist) - see .env.example
 def loginHuggingFace ():
     env = os.getenv("HUGGING_FACE_API_KEY")
-    token = "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"
     print("Hugging Face logging")
-    login(token)
+    login(env)
 class HuggingFace:
     def conversation(self, body):
         env = os.getenv("HUGGING_FACE_API_KEY")

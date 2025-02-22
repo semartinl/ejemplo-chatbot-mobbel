@@ -25,5 +25,5 @@ dist-ssr
 
 # Ignore all .env files
 .env
-/models/*/*
+/models/*/
 /__pycache__/*
