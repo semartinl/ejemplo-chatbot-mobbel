@@ -67,6 +67,7 @@ def chat():
     body = request.json
     return custom.chat(body, CHATBOT, database["answer"])
 
+
 @app.route("/chat-stream", methods=["POST"])
 def chat_stream():
     body = request.json
