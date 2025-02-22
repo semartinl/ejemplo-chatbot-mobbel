@@ -1,3 +1,70 @@
 __pycache__
+
+# Archivos y carpetas de Python
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+
+# Entornos virtuales
+venv/
+.env/
+.envrc
+*.venv
 .env
-.env.example
+
+# Configuraciones del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+logs/
+*.log
+
+# Modelos de IA y datasets
+/models/*/*
+checkpoints/
+*.h5
+*.hdf5
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.tflite
+*.pkl
+*.joblib
+*.pb
+*.npz
+*.npy
+*.tar.gz
+
+# Datos sensibles
+*.csv
+*.json
+*.yaml
+*.yml
+*.sqlite
+*.db
+*.mdb
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Cache y compilaciones
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+build/
+dist/
+*.egg-info/
+
+# Archivos de TensorBoard
+logs/
+events.out.tfevents.*
+
+# Archivos de configuración de IDEs y editores de texto
+.vscode/
+.idea/
+*.iml

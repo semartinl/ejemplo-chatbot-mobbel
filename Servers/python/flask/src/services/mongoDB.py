@@ -8,8 +8,9 @@ uri = "mongodb+srv://chatbot:Rufo2009@cluster0.yju2g.mongodb.net/?retryWrites=tr
 client = MongoClient(uri, server_api=ServerApi('1'))
 
 # Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
+def addData(db, collection, data):
+    try:
+        db[collection].insert_one(data)
+        return {"success": "Data has been added"}
+    except Exception as e:
+        return {"error": str(e)}

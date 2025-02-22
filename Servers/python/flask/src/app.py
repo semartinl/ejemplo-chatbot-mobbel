@@ -7,6 +7,7 @@ from services.cohere import Cohere
 from flask import Flask, request
 from dotenv import load_dotenv
 from flask_cors import CORS
+import database as dbase
 from models.ChatbotRAG import ChatbotRAG
 from models.DialogueController import DialogueController
 from models.ResponseGenerator import ResponseGenerator
@@ -19,13 +20,8 @@ import pandas as pd
 
 load_dotenv()
 
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-#C
-uri = "mongodb+srv://chatbot:Rufo2009@cluster0.yju2g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+database = dbase.conexionMongoDB()
 
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
 
 loginHuggingFace()
 # CHATBOT_MODEL = os.getenv("CHATBOT_MODEL")
@@ -39,10 +35,7 @@ nltk.download('punkt_tab', quiet=True)
 nltk.download('stopwords', quiet=True)
 SEMANTIC_SEARCH = SemanticSearchEnhancer()
 
-datos_pandas = pd.read_json("datos.json")
-SEMANTIC_SEARCH.prepare_data(datos_pandas)
-print("Datos preparados")
-print(datos_pandas)
+
 RESPONSE_ENGINE = ResponseGenerator()
 CHATBOT = ChatbotRAG(controller=CONTROLLER, device_setup=device,response_engine=RESPONSE_ENGINE, semantic_search=SEMANTIC_SEARCH)
 
@@ -72,7 +65,7 @@ custom = Custom()
 @app.route("/chat", methods=["POST"])
 def chat():
     body = request.json
-    return custom.chat(body, CHATBOT)
+    return custom.chat(body, CHATBOT, database["answer"])
 
 @app.route("/chat-stream", methods=["POST"])
 def chat_stream():

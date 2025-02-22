@@ -9,3 +9,4 @@ transformers
 bitsandbytes
 sentence_transformers
 flask
+database

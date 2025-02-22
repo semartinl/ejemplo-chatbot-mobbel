@@ -1,19 +1,34 @@
 from flask import Response
 import time
 import json
+from database import search_mongodb
 
 class Custom:
-    def chat(self, body, chatbot):
+    def chat(self, body, chatbot, collection_mongo):
         # Text messages are stored inside request body using the Deep Chat JSON format:
         # https://deepchat.dev/docs/connect
         print(body)
         # Sends response back to Deep Chat using the Response format:
         # https://deepchat.dev/docs/connect/#Response
 
+        #Recogemos la consulta del usuario
         consulta = body["messages"][-1]["text"]
         print(f"Consulta: {consulta}")
-        respuesta = chatbot.generate_response(query=consulta)
-        print(f"Respuesta: {respuesta}")
+
+        #Plasmamos la consulta en nuestro embbeding
+        final_results = search_mongodb(query=consulta,collection=collection_mongo, semantic_search=chatbot.semantic_search)
+        print(f"Resultados: {final_results}")
+
+        #Comprobamos que los resultados tengan relación con los documentos de la base de datos. Si no hay resultados, se devuelve un mensaje de error
+        #Se comprueba si la lista de resultados está vacía, porque mongodb devuelve una lista vacía si no encuentra resultados relacionados.
+        if max(final_results, key=lambda x: x["score"])["score"] < 0.6:
+            print("No se han encontrado resultados relacionados")
+            #--------------------------------MODIFICAR ESTA RESPUESTA PARA QUE SEA MÁS AMIGABLE--------------------------------
+            respuesta = "No se han encontrado resultados relacionados"
+        else:
+            #Generamos la respuesta
+            respuesta = chatbot.response_engine.generate_response(consulta, final_results)
+            print(f"Respuesta: {respuesta}")
         return {"text": respuesta}
 
     def chat_stream(self, body):

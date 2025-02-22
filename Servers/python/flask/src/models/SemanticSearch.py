@@ -47,6 +47,37 @@ class SemanticSearchEnhancer:
 
         self.df = df
         return self
+    
+    def prepare_data_in_mongo(self, df: pd.DataFrame):
+        """Prepara los datos generando embeddings de sinopsis y keywords."""
+        # Combinar sinopsis con géneros
+        enhanced_texts = [
+            f"{row['answer']} "
+            for _, row in df.iterrows()
+        ]
+        print(f"Tamaño del dataframe: {len(df)}")
+        print(f"Tamaño de enhanced texts: {len(enhanced_texts)}")
+
+        # Extraer y embeber keywords
+        keywords = [self.extract_keywords(text) for text in enhanced_texts]
+
+        # Generar embeddings
+        print("Generando embeddings de las respuestas...")
+        self.answer_embeddings = self.model.encode(enhanced_texts)
+
+        print("Generando embeddings de keywords...")
+        self.keyword_embeddings = self.model.encode(keywords)
+
+
+
+        df["answer_embbeding"] = list(self.answer_embeddings)
+        df["keyword_embedding"] = list(self.keyword_embeddings)
+        self.df = df
+
+        # df.to_csv("datos_embbeding.csv", index=False)
+        return self
+
+
 
     def search(self, query: str, df: pd.DataFrame=None, top_k: int = 3,
               synopsis_weight: float = 0.7) -> List[Dict]:
