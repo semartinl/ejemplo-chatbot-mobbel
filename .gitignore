@@ -23,7 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+
 # Ignore all .env files
 .env
-models/*/
+models/*/*
 __pycache__/*
