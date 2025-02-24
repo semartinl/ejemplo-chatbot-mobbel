@@ -14,11 +14,12 @@ class SemanticSearchEnhancer:
     Mejora la búsqueda semántica combinando sinopsis y palabras clave.
     """
     #En el model_name, se puede cambiar por cualquier otro modelo de embedding que se encuentre en HuggingFace.
-    def __init__(self, model_name: str = 'distiluse-base-multilingual-cased-v1'):
+    def __init__(self, model_name: str = 'distiluse-base-multilingual-cased-v1', database = None):
         self.model = SentenceTransformer(model_name)
         self.answer_embeddings = None
         self.keyword_embeddings = None
         self.df = None
+        self.database = database
 
     def extract_keywords(self, text: str) -> str:
         """Extrae palabras clave del texto."""
@@ -110,3 +111,37 @@ class SemanticSearchEnhancer:
             })
 
         return results
+    
+    def search_in_mongo(self, query:str, collection_name):
+        """
+        Busca documentos en MongoDB utilizando embeddings semánticos.
+        
+        :param query: Texto de la consulta.
+        :param collection_name Nombre de la collection sobre la que se quiere realizar la búsqueda semántica.
+        :return: Lista de documentos que coinciden con la consulta.
+        """
+        collection = self.database[collection_name]
+        query_embedding = self.model.encode(query)
+        #la siguiente consulta busca los 3 documentos más similares a la consulta.La 2 consulta es para recuperar los campos que se desean mostrar. En este caso, se muestra el campo de "answer"
+        results = collection.aggregate([{
+        "$vectorSearch": {
+        "index": "vector_index",
+        "path": "semantic_embedding",
+        "queryVector": query_embedding.tolist(),
+        "numCandidates": 3,
+        "limit": 3
+            }
+        }, {
+            "$project": {
+                "_id": 0,
+                "answer": 1,
+                "score": {
+                    "$meta": "vectorSearchScore"
+                }
+            }
+        }
+    
+        ])
+
+
+        return list(results)

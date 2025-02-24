@@ -26,5 +26,15 @@ dist-ssr
 
 # Ignore all .env files
 .env
-models/*/*
+models-ia/*
+models-ia/
 __pycache__/*
+
+# Cache y compilaciones
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+build/
+dist/
+*.egg-info/

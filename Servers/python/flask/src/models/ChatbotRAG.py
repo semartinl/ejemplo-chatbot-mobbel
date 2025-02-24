@@ -4,7 +4,7 @@ from .ResponseGenerator import ResponseGenerator
 from .DialogueController import DialogueController
 from .SemanticSearch import SemanticSearchEnhancer
 class ChatbotRAG:
-    def __init__(self, controller,device_setup, chatbot_model="TinyLlama/TinyLlama-1.1B-Chat-v1.0", cache_dir="./models/TinyLlama-1.1B-Chat-v1.0", semantic_search=SemanticSearchEnhancer(), response_engine=ResponseGenerator()):
+    def __init__(self, controller,device_setup, chatbot_model="TinyLlama/TinyLlama-1.1B-Chat-v1.0", cache_dir="./models-ia/TinyLlama-1.1B-Chat-v1.0", semantic_search:SemanticSearchEnhancer = None, response_engine:ResponseGenerator = None):
         self.tokenizer = AutoTokenizer.from_pretrained(chatbot_model)
         self.model = AutoModelForCausalLM.from_pretrained(
             chatbot_model,
@@ -52,10 +52,25 @@ class ChatbotRAG:
         # Actualiza el prompt con la respuesta del asistente
         self.dialogue_controller.add_assistant_prompt(answer)
         return answer
-    def generate_response(self, query: str,
-                         max_length: int = 1000) -> str:
+    def generate_response_database(self, query: str,
+                         max_length: int = 1000, collection_mongo_name="answer") -> str:
         """Genera una respuesta usando el modelo local."""
-        final_results = self.semantic_search.search(query, top_k=3)
-        response = self.response_engine.generate_response(query=query, search_results=final_results)
+
+        # Actualiza el prompt
+        # prompt = self.dialogue_controller.add_user_prompt(query)
+        # Resolver prompt
+        # answer = self.__run_prompt(prompt, do_sample, temperature, top_p, max_length, show_prompt)
+        # Actualiza el prompt con la respuesta del asistente
+        
+        final_results = self.semantic_search.search_in_mongo(query=query,collection_name=collection_mongo_name)
+        #Comprobamos que los resultados tengan relación con los documentos de la base de datos. Si no hay resultados, se devuelve un mensaje de error
+        #Se comprueba si la lista de resultados está vacía, porque mongodb devuelve una lista vacía si no encuentra resultados relacionados.
+        if max(final_results, key=lambda x: x["score"])["score"] < 0.6:
+            print("No se han encontrado resultados relacionados")
+            #--------------------------------MODIFICAR ESTA RESPUESTA PARA QUE SEA MÁS AMIGABLE--------------------------------
+            response = "No se han encontrado resultados relacionados"
+        else:
+            response = self.response_engine.generate_response(query=query, search_results=final_results)
+        self.dialogue_controller.add_assistant_prompt(response)
         return response
 

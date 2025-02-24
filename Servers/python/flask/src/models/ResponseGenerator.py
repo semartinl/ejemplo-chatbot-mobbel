@@ -18,7 +18,7 @@ class ResponseGenerator:
     """
     Generador de respuestas usando un modelo local pequeño.
     """
-    def __init__(self, model_name: str = "TinyLlama/TinyLlama-1.1B-Chat-v1.0", cache_dir="./models/TinyLlama-1.1B-Chat-v1.0"):
+    def __init__(self, model_name: str = "TinyLlama/TinyLlama-1.1B-Chat-v1.0", cache_dir="./models-ia/TinyLlama-1.1B-Chat-v1.0"):
         """
         Inicializa el generador con un modelo local.
         Args:
@@ -45,7 +45,7 @@ class ResponseGenerator:
         context_items = []
         for i, row in enumerate(results[:max_results], 1):
             context_items.append(
-                f"- Respuesta: {row['answer']} \n"
+                f"{row['answer']} \n"
             )
         return "\n\n".join(context_items)
 
@@ -76,6 +76,8 @@ Contexto:
 
 <|assistant|>
 """
+        # formatted_prompt = self.tokenizer.apply_chat_template(conversation=base_prompt, tokenize=False, return_dict=False, add_generation_prompt=True)
+        
 
         return base_prompt
 

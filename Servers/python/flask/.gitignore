@@ -23,7 +23,8 @@ logs/
 *.log
 
 # Modelos de IA y datasets
-/models/*/*
+models-ia/*
+models-ia/
 checkpoints/
 *.h5
 *.hdf5

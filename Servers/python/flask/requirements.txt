@@ -10,3 +10,4 @@ bitsandbytes
 sentence_transformers
 flask
 database
+dotenv

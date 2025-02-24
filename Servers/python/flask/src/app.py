@@ -23,7 +23,7 @@ load_dotenv()
 database = dbase.conexionMongoDB()
 
 
-loginHuggingFace()
+# loginHuggingFace()
 # CHATBOT_MODEL = os.getenv("CHATBOT_MODEL")
 device = ("cuda" if torch.cuda.is_available() else "cpu")
 SYSTEM_PROMPT = "Quiero que te comportes como un asistente virtual"
@@ -33,7 +33,7 @@ CONTROLLER = DialogueController(assistant_token="<|assistant|>", system_prompt=S
 nltk.download('punkt', quiet=True)
 nltk.download('punkt_tab', quiet=True)
 nltk.download('stopwords', quiet=True)
-SEMANTIC_SEARCH = SemanticSearchEnhancer()
+SEMANTIC_SEARCH = SemanticSearchEnhancer(database=database)
 
 
 RESPONSE_ENGINE = ResponseGenerator()
