@@ -1,0 +1,15 @@
+services:
+  frontend:
+    # image: 619071331372.dkr.ecr.us-east-1.amazonaws.com/carpooling-proyect:2.0
+    build: ./frontend-chatbot
+    ports:
+      - 5173:5173
+    # environment:
+    #   # - VITE_USUARIOS_URL=http://api-usuarios:8083/
+    #   - HUGGING_FACE_API_KEY=""
+  api-chatbot:
+    build: ./Servers/python/flask/src
+    ports:
+      - 8080:8080
+
+    

@@ -9,5 +9,7 @@ transformers
 bitsandbytes
 sentence_transformers
 flask
-database
+flask_cors
+pymongo
 dotenv
+torch

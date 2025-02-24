@@ -15,6 +15,7 @@ class DialogueController:
 
     def add_assistant_prompt(self, assistant_prompt):
         assistant_prompt_exclusive = assistant_prompt.split(self.assistant_token)
+        print(f"Assistant promp: {assistant_prompt_exclusive}")
         final_prompt = ""
         if len(assistant_prompt_exclusive) == 2:
             final_prompt = assistant_prompt_exclusive[1]
