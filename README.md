@@ -4,6 +4,13 @@ En este repositorio, se van a poder encontrar 2 carpetas:
 2. La API para generar las respuestas del modelo.
 
 ## EJECUCIÓN 
+### ANTES DE EJECUTAR
+Antes que nada, es necesario que se modifique el docker compose, en el apartado de environment, del servicios de la API para que sea capaz de hacer las llamadas correspondientes a la API de Hugging Face. Para ello, se deberá de cambiar la propieadad de environment siguiente por vuestra correspondiente API key de HF:
+```yml
+environment:
+      - HUGGING_FACE_API_KEY="tu-api-key"
+```
+### PARA EMPEZAR LA EJECUCIÓN
 Se ha establecido un Docker para ambos apartados, tanto para la API como para el diseño web. Para ejecutarlo todo, en la carpeta raiz, ejecuta el siguiente comando:
 ```bash
 docker-compose build
@@ -12,6 +19,7 @@ docker-compose up
 1. El primer comando se utiliza para preparar el entorno de ambos Dockers y sus respectivas imagenes.
 2. Se utiliza para desplegar ambos contenedores
 
+### PARA PARAR LA EJECUCIÓN
 Si lo que quieres es bajar el despliegue, utiliza el siguiente comando en la misma carpeta donde has realizado los anteriores comandos:
 ```bash
 docker-compose down
