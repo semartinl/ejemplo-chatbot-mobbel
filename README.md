@@ -3,6 +3,19 @@ En este repositorio, se van a poder encontrar 2 carpetas:
 1. La carpeta del frontend (fronted-chatbot)
 2. La API para generar las respuestas del modelo.
 
+## EJECUCIÓN 
+Se ha establecido un Docker para ambos apartados, tanto para la API como para el diseño web. Para ejecutarlo todo, en la carpeta raiz, ejecuta el siguiente comando:
+```bash
+docker-compose build
+docker-compose up
+```
+1. El primer comando se utiliza para preparar el entorno de ambos Dockers y sus respectivas imagenes.
+2. Se utiliza para desplegar ambos contenedores
+
+Si lo que quieres es bajar el despliegue, utiliza el siguiente comando en la misma carpeta donde has realizado los anteriores comandos:
+```bash
+docker-compose down
+```
 ## HERRAMIENTAS NECESARIAS PARA SU EJECUCIÓN
 ### FRONTEND
 En la parte del frontend, se ha utilizado React, con el empaquetador Vite. Por ello, es necesario tener instalado con anterioridad, o es recomendable, Node.js y Vite. 
