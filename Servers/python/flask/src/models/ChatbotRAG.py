@@ -18,7 +18,15 @@ class ChatbotRAG:
                 f"{row['answer']} \n"
             )
         return "\n\n".join(context_items)
-    
+    def augment_prompt(self, query: str, search_results):
+        context = self.create_context(search_results)
+        
+        # feed into an augmented prompt
+        augmented_prompt = f"""A partir de la siguiente información del contexto, ¿podrías responder a la query del usuario?
+Contexto:
+{context}
+Query: {query}"""
+        return augmented_prompt
     def create_prompt_manual(self, query: str, context: str,
                      user_preferences: Optional[Dict] = None) -> str:
         """Crea un prompt estructurado para el modelo."""
@@ -27,22 +35,13 @@ class ChatbotRAG:
 
 Tu conocimiento se basa en información sobre Mobbeel, incluyendo:
 
-Onboarding digital (eKYC/AML).
-Firma biométrica.
-Autenticación biométrica.
-Cumplimiento normativo (KYC, AML, eIDAS, GDPR, etc.).
-Prevención del fraude mediante biometría y detección de amenazas.
-automatización de procesos.
-Integración flexible a través de SDKs, APIs y gateway web.
-Certificaciones de seguridad y cumplimiento legal.
-
 Si un usuario hace una pregunta fuera de este ámbito, responde con amabilidad que solo puedes proporcionar información sobre Mobbeel y sus servicios. Usa un tono profesional, pero cercano. Asegúrate de que todas tus respuestas sean claras, concisas y útiles. Si no tienes la información exacta, evita inventar y, en su lugar, explica que no puedes responder con certeza.*
 
+<|user|> 
+A partir de la siguiente información del contexto, ¿podrías responder a la query del usuario?
 Contexto:
 {context}
-
-<|user|>
-{query}
+Query: {query}
 
 <|assistant|>
 """
@@ -58,25 +57,25 @@ Contexto:
         try:
             # Crear contexto y prompt
             context = self.create_context(search_results)
-            prompt = self.create_prompt(query, context, user_preferences)
+            prompt = self.create_prompt_manual(query, context, user_preferences)
 
             # Tokenizar
-            inputs = self.tokenizer(prompt, return_tensors="pt")
-            inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            inputs = self.chatbot.tokenizer(prompt, return_tensors="pt")
+            inputs = {k: v.to(self.chatbot.model.device) for k, v in inputs.items()}
 
             # Generar respuesta
-            outputs = self.model.generate(
+            outputs = self.chatbot.model.generate(
                 **inputs,
                 max_length=max_length,
                 num_return_sequences=1,
                 temperature=0.7,
                 top_p=0.9,
                 do_sample=True,
-                pad_token_id=self.tokenizer.eos_token_id
+                pad_token_id=self.chatbot.tokenizer.eos_token_id
             )
 
             # Decodificar y limpiar respuesta
-            response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            response = self.chatbot.tokenizer.decode(outputs[0], skip_special_tokens=True)
             response = response.replace(prompt, "").strip()
 
             return response
@@ -88,24 +87,24 @@ Contexto:
     def generate_response_database(self, query: str,
                          max_length: int = 1000, collection_mongo_name="answer") -> str:
         """Genera una respuesta usando el modelo local."""
-
-        
     
         final_results = self.semantic_search.search_in_mongo(query=query,collection_name=collection_mongo_name)
         
         #Comprobamos que los resultados tengan relación con los documentos de la base de datos. Si no hay resultados, se devuelve un mensaje de error
         #Se comprueba si la lista de resultados está vacía, porque mongodb devuelve una lista vacía si no encuentra resultados relacionados.
-        print(final_results)
+        
         if max(final_results, key=lambda x: x["score"])["score"] < 0.7:
             print("No se han encontrado resultados relacionados")
             #--------------------------------MODIFICAR ESTA RESPUESTA PARA QUE SEA MÁS AMIGABLE--------------------------------
             response = "No se han encontrado resultados relacionados"
         else:
-            # response = self.response_engine.generate_response(query=query, search_results=final_results)
-            context = self.create_context(final_results)
-
-            response = self.chatbot.answer(user_prompt=f"{context} \n # {query}",temperature=0.7, top_p=0.9, max_length=max_length, show_prompt=True)
-            response = response.split(self.chatbot.dialogue_controller.assistant_token)[-1].strip()
+            
+            # context = self.create_context(final_results)
+            # prompt = self.create_prompt_manual(query, context)
+            # response = self.generate_response(query, final_results)
+            prompt = self.augment_prompt(query, final_results)
+            response = self.chatbot.answer(user_prompt=prompt,temperature=0.7, top_p=0.9, max_length=max_length, show_prompt=True)
+            # response = self.chatbot.answer(user_prompt=f"{context} \n # {query}",temperature=0.7, top_p=0.9, max_length=max_length, show_prompt=True)
             
         return response
 

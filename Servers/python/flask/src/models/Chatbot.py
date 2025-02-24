@@ -44,11 +44,14 @@ class Chatbot:
     def answer(self, user_prompt, do_sample=True, temperature=0.1, top_p=0.9, max_length=2047, show_prompt=False):
         # Actualiza el prompt
         prompt = self.dialogue_controller.add_user_prompt(user_prompt)
-        print("Prompt: ",
-              prompt)
         # Resolver prompt
         answer = self.__run_prompt(prompt, do_sample, temperature, top_p, max_length, show_prompt)
+        
         # Actualiza el prompt con la respuesta del asistente
         self.dialogue_controller.add_assistant_prompt(answer)
+
+        answer = answer.split(self.dialogue_controller.assistant_token)[-1].strip()
+
+
         return answer
     
