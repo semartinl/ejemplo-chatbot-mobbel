@@ -13,3 +13,4 @@ flask_cors
 pymongo
 dotenv
 torch
+PyPDF2

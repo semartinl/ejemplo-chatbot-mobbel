@@ -18,6 +18,7 @@ class ChatbotRAG:
                 f"{row['answer']} \n"
             )
         return "\n\n".join(context_items)
+    @staticmethod
     def augment_prompt(self, query: str, search_results):
         context = self.create_context(search_results)
         
@@ -102,7 +103,7 @@ Query: {query}
             # context = self.create_context(final_results)
             # prompt = self.create_prompt_manual(query, context)
             # response = self.generate_response(query, final_results)
-            prompt = self.augment_prompt(query, final_results)
+            prompt = self.augment_prompt(self,query=query, search_results=final_results)
             response = self.chatbot.answer(user_prompt=prompt,temperature=0.7, top_p=0.9, max_length=max_length, show_prompt=True)
             # response = self.chatbot.answer(user_prompt=f"{context} \n # {query}",temperature=0.7, top_p=0.9, max_length=max_length, show_prompt=True)
             

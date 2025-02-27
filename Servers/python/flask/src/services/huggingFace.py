@@ -1,14 +1,34 @@
+from typing import Dict, List
 import requests
 import os
 from huggingface_hub import login
 # Make sure to set the HUGGING_FACE_API_KEY environment variable in a .env file (create if does not exist) - see .env.example
 def loginHuggingFace ():
-    env = os.getenv("HUGGING_FACE_API_KEY")
+    env = os.getenv("HUGGING_FACE_API_KEY_MOBBEEL")
     print("Hugging Face logging")
     login(env)
+
+def create_context(results: List[Dict], max_results: int = 3) -> str:
+    """Crea un contexto estructurado a partir de los resultados."""
+    context_items = []
+    for i, row in enumerate(results[:max_results], 1):
+        context_items.append(
+            f"{row['answer']} \n"
+        )
+    return "\n\n".join(context_items)
+
+def augment_prompt(query: str, search_results):
+    context = create_context(search_results)
+    
+    # feed into an augmented prompt
+    augmented_prompt = f"""A partir de la siguiente información del contexto, ¿podrías responder a la query del usuario?
+Contexto:
+{context}
+Query: {query}"""
+    return augmented_prompt
 class HuggingFace:
-    def conversation(self, body):
-        env = os.getenv("HUGGING_FACE_API_KEY")
+    def conversation(self, body, semantic_search):
+        env = os.getenv("HUGGING_FACE_API_KEY_MOBBEEL")
         
         headers = {
             "Content-Type": "application/json",
@@ -16,10 +36,21 @@ class HuggingFace:
         }
         # Text messages are stored inside request body using the Deep Chat JSON format:
         # https://deepchat.dev/docs/connect
+        query = body["messages"][-1]["text"]
+
+
+        search_result = semantic_search.search_in_mongo(query, "answer")
+        prompt = augment_prompt(query, search_result)
+
+        
+        
         conversation_body = self.create_conversation_body(body["messages"])
         #HASTA AQUÍ LLEGA
+        print(f"Conversación: {conversation_body}")
+
+        prompt_body = {"inputs": prompt, "wait_for_model": True}
         response = requests.post(
-            "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill", json={"inputs": conversation_body["inputs"]["text"],  "wait_for_model": True}, headers=headers)
+            "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0", json=prompt_body, headers=headers)
         json_response = response.json()
 
         print(f"Respuesta a la api de hugging Face: {json_response}")

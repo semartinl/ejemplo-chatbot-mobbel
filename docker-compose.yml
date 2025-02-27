@@ -4,12 +4,13 @@ services:
     build: ./frontend-chatbot
     ports:
       - 5173:5173
-    # environment:
-    #   # - VITE_USUARIOS_URL=http://api-usuarios:8083/
-    #   - HUGGING_FACE_API_KEY=""
+
   api-chatbot:
     build: ./Servers/python/flask/src
     ports:
       - 8080:8080
+    environment:
+      - HUGGING_FACE_API_KEY="tu-api-key"
+      - HUGGING_FACE_API_KEY_MOBBEEL = "api-key-mobbeel"
 
     

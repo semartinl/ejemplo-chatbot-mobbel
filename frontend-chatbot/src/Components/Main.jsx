@@ -7,6 +7,7 @@ export default function Main() {
             <NavLink to="/api-custom">Api personalizada</NavLink>
             <NavLink to="/api-openai">Api de OpenAI</NavLink>
             <NavLink to="/api-huggingface">Hugging Face</NavLink>
+            <NavLink to="/api-colab">Api en Colab</NavLink>
             
         </header>
         <Outlet/>

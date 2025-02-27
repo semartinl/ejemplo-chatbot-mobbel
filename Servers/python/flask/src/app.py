@@ -106,7 +106,7 @@ huggingFace = HuggingFace()
 @app.route("/huggingface-conversation", methods=["POST"])
 def hugging_face_conversation():
     body = request.json
-    return huggingFace.conversation(body)
+    return huggingFace.conversation(body, SEMANTIC_SEARCH)
 
 @app.route("/huggingface-image", methods=["POST"])
 def hugging_face_image_classification():

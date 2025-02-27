@@ -1,6 +1,8 @@
 import { Routes, Route, BrowserRouter } from "react-router";
 import CustomApi from "./Components/CustomApi";
 import Main from "./Components/Main";
+import ApiColab from "./Components/ApiColab";
+import ApiHF from "./Components/ApiHF";
 
 
 export default function App() {
@@ -15,8 +17,9 @@ export default function App() {
        
         <Route path="api-custom" element={<CustomApi/>}/>
         
+        <Route path="api-colab" element={<ApiColab/>}/>
         <Route path="api-openai"></Route>
-        <Route path="api-huggingface"></Route>
+        <Route path="api-huggingface" element={<ApiHF/>}/>
 
       </Route>
       </Routes>
