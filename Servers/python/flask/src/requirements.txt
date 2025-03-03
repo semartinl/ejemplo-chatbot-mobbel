@@ -6,7 +6,6 @@ typing
 nltk
 datetime
 transformers
-bitsandbytes
 sentence_transformers
 flask
 flask_cors
@@ -14,3 +13,4 @@ pymongo
 dotenv
 torch
 PyPDF2
+ollama

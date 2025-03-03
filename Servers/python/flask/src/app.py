@@ -12,6 +12,7 @@ from models.ChatbotRAG import ChatbotRAG
 from models.DialogueController import DialogueController
 from models.ResponseGenerator import ResponseGenerator
 from models.SemanticSearch import SemanticSearchEnhancer
+from services.ollama import OllamaChat
 from services.huggingFace import loginHuggingFace
 import torch
 import nltk
@@ -61,6 +62,13 @@ def handle_exception(e):
     print(e)
     return {"error": "Internal service error"}, 500
 
+
+# ------------------ OLLAMA API ------------------
+ollama = OllamaChat("llama3.2")
+@app.route("/ollama-chat", methods=["POST"])
+def ollama_api_chat():
+    body = request.json
+    return ollama.ollama_chat(body, database["answer"])
 # ------------------ CUSTOM API ------------------
 
 custom = Custom()
