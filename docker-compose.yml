@@ -12,5 +12,14 @@ services:
     environment:
       - HUGGING_FACE_API_KEY="tu-api-key"
       - HUGGING_FACE_API_KEY_MOBBEEL = "api-key-mobbeel"
+  
+  api-mongo:
+    build: ./Servers/Database/src
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+
 
     

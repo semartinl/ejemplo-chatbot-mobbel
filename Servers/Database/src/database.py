@@ -2,6 +2,9 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.server_api import ServerApi
 import PyPDF2
+from langchain_community.document_loaders import PyPDFLoader
+
+from pptx import Presentation
 import re
 
 def extract_questions_and_answers(pdf_path):
@@ -107,10 +110,24 @@ def search_mongodb(query:str, collection, semantic_search):
 
     return list(results)
 
-# def extract_text_from_pdf(file_path):
-#     loader = PyPDFLoader(file_path)
-#     text=loader.load()
-#     return text
+
+def read_pdf(file_path: str) -> str:
+    """Lee un archivo PDF y devuelve su contenido formateado."""
+    text = []
+    
+    try:
+        with open(file_path, "rb") as file:
+            reader = PyPDF2.PdfReader(file)
+            for page in reader.pages:
+                text_page = page.extract_text()
+                text_page = text_page.replace("\n", "")
+                text.append(text_page)
+                # text.append(page.extract_text() or "")  # Extraer texto de cada página
+    except Exception as e:
+        return f"Error al leer el PDF: {str(e)}"
+    
+    return "\n".join(text).strip()
+    # return text
 
 # def extract_text_from_powerpoint(file_path):
 #     prs = Presentation(file_path)
@@ -145,3 +162,5 @@ def conexionMongoDB():
 # busqueda = search_mongodb("¿Que soluciones ofrece Mobbeel?", database, semantic_search)
 
 # print(list(busqueda))
+texto = read_pdf("Preguntas_cuestionario_resumidas.pdf")
+print(texto)

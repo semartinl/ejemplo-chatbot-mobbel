@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 from sentence_transformers import SentenceTransformer
 import database as dbase
+from Servers.Database.src.services.QA_Documents import QA_Documents
 app = Flask(__name__)
 
 # this will need to be reconfigured before taking the app to production
@@ -12,7 +13,7 @@ cors = CORS(app)
 database = dbase.conexionMongoDB()
 # client = MongoClient("mongodb://localhost:27017/")
 # db = client["chat-embbeding"]
-collection = database["answer"]
+collection_qa = database["answer"]
 
 # Carga del modelo de embeddings
 model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
@@ -20,56 +21,34 @@ model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
 def generate_embedding(text):
     return model.encode(text).tolist()
 
+document_bd = QA_Documents()
+
 @app.route("/answers", methods=["GET"])
 def get_answers():
-    answers = list(collection.find())
-    for answer in answers:
-        answer["_id"] = str(answer["_id"])
-    return jsonify(answers)
+    return document_bd.get_qa_documents(collection_qa)
 
 @app.route("/answers/<id>", methods=["GET"])
 def get_answer(id):
-    answer = collection.find_one({"_id": ObjectId(id)})
-    if answer:
-        answer["_id"] = str(answer["_id"])
-        return jsonify(answer)
-    return jsonify({"error": "Not found"}), 404
+    body = request.json
+    return document_bd.get_qa_document_by_id(collection_qa, id)
 
 @app.route("/answers", methods=["POST"])
 def create_answer():
     data = request.json
-    if "question" not in data or "answer" not in data:
-        return jsonify({"error": "Missing fields"}), 400
-    
-    embedding = generate_embedding(data["answer"])
-    data["semantic_embedding"] = embedding
-    result = collection.insert_one(data)
-    return jsonify({"_id": str(result.inserted_id)})
+    return document_bd.create_qa_document(data, collection_qa, model)
 
 @app.route("/answers/<id>", methods=["PUT"])
 def update_answer(id):
     data = request.json
-    if "question" not in data or "answer" not in data:
-        return jsonify({"error": "Missing fields"}), 400
-    
-    embedding = generate_embedding(data["answer"])
-    data["semantic_embedding"] = embedding
-    result = collection.update_one({"_id": ObjectId(id)}, {"$set": data})
-    
-    if result.matched_count:
-        return jsonify({"message": "Updated successfully"})
-    return jsonify({"error": "Not found"}), 404
+    return document_bd.update_qa_document(data, collection_qa, id, model)
 
 @app.route("/answers/<id>", methods=["DELETE"])
 def delete_answer(id):
-    result = collection.delete_one({"_id": ObjectId(id)})
-    if result.deleted_count:
-        return jsonify({"message": "Deleted successfully"})
-    return jsonify({"error": "Not found"}), 404
+    return document_bd.delete_qa_document(collection_qa, id)
 
 @app.route("/search", methods=["POST"])
 def search_mongodb():
-# def search_mongodb(query:str, collection=collection, embbeding_model=model):
+# def search_mongodb(query:str, collection_qa=collection_qa, embbeding_model=model):
     """
     Busca documentos en MongoDB utilizando embeddings semánticos.
     
@@ -81,7 +60,7 @@ def search_mongodb():
 
     query_embedding = model.encode(query)
     #la siguiente consulta busca los 3 documentos más similares a la consulta.La 2 consulta es para recuperar los campos que se desean mostrar. En este caso, se muestra el campo de "answer"
-    results = collection.aggregate([{
+    results = collection_qa.aggregate([{
     "$vectorSearch": {
       "index": "vector_index",
       "path": "semantic_embedding",
