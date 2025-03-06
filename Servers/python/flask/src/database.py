@@ -126,4 +126,5 @@ def conexionMongoDB():
 
 # busqueda = search_mongodb("¿Que soluciones ofrece Mobbeel?", database, semantic_search)
 
+
 # print(list(busqueda))

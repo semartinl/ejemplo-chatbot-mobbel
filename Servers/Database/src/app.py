@@ -4,7 +4,8 @@ from pymongo import MongoClient
 from bson import ObjectId
 from sentence_transformers import SentenceTransformer
 import database as dbase
-from Servers.Database.src.services.QA_Documents import QA_Documents
+from services.QA_Documents import QA_Documents
+from services.Resource_service import Resource_service
 app = Flask(__name__)
 
 # this will need to be reconfigured before taking the app to production
@@ -45,6 +46,24 @@ def update_answer(id):
 @app.route("/answers/<id>", methods=["DELETE"])
 def delete_answer(id):
     return document_bd.delete_qa_document(collection_qa, id)
+
+@app.route("/qa_documents", methods=["POST"])
+def add_document():
+    body = request.json
+    pdf_path = body["pdf_path"]
+    document_bd.add_document_to_mongo(database, "answer", pdf_path, model)
+    return jsonify({"message": "Document added successfully"})
+#--------------------- RESOURCES------------------------------
+
+resource_service = Resource_service()
+@app.route("/resources", methods=["POST"])
+def add_resource():
+    body = request.json
+    print(body)
+    resource_service.add_resource(database=database, body=body, model_embedding=model)
+    return jsonify({"message": "Document added successfully"})
+
+
 
 @app.route("/search", methods=["POST"])
 def search_mongodb():

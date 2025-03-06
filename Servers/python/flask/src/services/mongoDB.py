@@ -14,3 +14,4 @@ def addData(db, collection, data):
         return {"success": "Data has been added"}
     except Exception as e:
         return {"error": str(e)}
+

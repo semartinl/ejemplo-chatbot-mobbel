@@ -6,11 +6,19 @@
 
 
 from typing import List
-
-
+from pydantic import BaseModel
+import json
 class Embbeding:
-    def __init__(self, id:str, resourceId:str, content:str, embedding:List[int]):
+    def __init__(self, id: str, resourceId: str, content: str, embedding: List[int]):
         self.id = id
         self.resourceId = resourceId
         self.content = content
         self.embedding = embedding
+
+    def to_json(self):
+        """Convierte el objeto Embbeding a un diccionario y luego lo serializa a JSON."""
+        return json.dumps(self.__dict__, indent=4)  # Usamos self.__dict__ para acceder a los atributos
+
+
+    
+    

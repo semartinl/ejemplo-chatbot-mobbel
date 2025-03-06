@@ -5,29 +5,13 @@
 
 import PyPDF2
 import re
-def extract_questions_and_answers(pdf_path):
-    questions_answers = []
-    
-    with open(f"./{pdf_path}", "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        text = "".join([page.extract_text() for page in reader.pages if page.extract_text()])
-    
-    # Expresión regular para capturar preguntas numeradas y sus respuestas
-    pattern = re.compile(r"(\d+)\.\s?(.*?)\?\s*(.*?)(?=\n\d+\.| \Z)", re.S)
-    
-    matches = pattern.findall(text)
-    
-    for match in matches:
-        question_number, question_text, answer_text = match
-        question_text = question_text.strip()
-        question_text = question_text.replace("\n", "")
+from pydantic import BaseModel
+class QA_documents(BaseModel):
+    question:str
+    answer:str
 
-        answer_text = answer_text.strip()
-        answer_text = answer_text.replace("\n", "")
-        
-        questions_answers.append({"question": question_text.strip(), "answer": answer_text})
-    
-    return questions_answers
+
+
 
 def add_document_to_mongo(database, collection_name,pdf_path, embeddings_model):
     """
