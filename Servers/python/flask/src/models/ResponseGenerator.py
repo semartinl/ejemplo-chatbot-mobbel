@@ -1,7 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from typing import List, Dict, Optional
-import bitsandbytes as bnb
 import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer

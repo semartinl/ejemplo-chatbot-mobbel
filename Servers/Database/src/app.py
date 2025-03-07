@@ -53,6 +53,7 @@ def add_document():
     pdf_path = body["pdf_path"]
     document_bd.add_document_to_mongo(database, "answer", pdf_path, model)
     return jsonify({"message": "Document added successfully"})
+
 #--------------------- RESOURCES------------------------------
 
 resource_service = Resource_service()
@@ -63,7 +64,27 @@ def add_resource():
     resource_service.add_resource(database=database, body=body, model_embedding=model)
     return jsonify({"message": "Document added successfully"})
 
+# Rutas de la API
+@app.route("/resource/<resource_id>", methods=["GET"])
+def get_resource_route(resource_id):
+    return resource_service.get_resource(database,resource_id)
 
+@app.route("/resources", methods=["GET"])
+def get_all_resources_route():
+    return resource_service.get_all_resources(database)
+
+@app.route("/resource/<resource_id>", methods=["PUT"])
+def update_resource_route(resource_id):
+    body = request.json
+    return resource_service.update_resource(database,resource_id, body)
+
+@app.route("/resource/<resource_id>", methods=["DELETE"])
+def delete_resource_route(resource_id):
+    return resource_service.delete_resource_by_id(database,resource_id)
+
+@app.route("/resources", methods=["DELETE"])
+def delete_all_resources_route():
+    return resource_service.delete_all_resource(database)
 
 @app.route("/search", methods=["POST"])
 def search_mongodb():

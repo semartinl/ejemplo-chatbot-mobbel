@@ -14,3 +14,4 @@ dotenv
 torch
 PyPDF2
 ollama
+accelerate

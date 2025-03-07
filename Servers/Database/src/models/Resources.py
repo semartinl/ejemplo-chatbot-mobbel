@@ -8,6 +8,7 @@ from pydantic import BaseModel
 class Resource(BaseModel):
     id: int
     content: str
+    # document_name: str
     createdAt: str
     updatedAt: str
 

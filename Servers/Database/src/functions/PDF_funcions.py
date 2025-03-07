@@ -1,5 +1,4 @@
 __package__
-
 from typing import List
 import PyPDF2
 import re

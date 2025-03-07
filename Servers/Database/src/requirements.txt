@@ -3,3 +3,7 @@ flask
 flask_cors
 python-pptx
 unstructured
+langchain_community
+PyPDF2
+sentence_transformers
+torch
