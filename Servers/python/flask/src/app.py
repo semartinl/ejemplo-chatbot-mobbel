@@ -68,7 +68,7 @@ ollama = OllamaChat("llama3.2")
 @app.route("/ollama-chat", methods=["POST"])
 def ollama_api_chat():
     body = request.json
-    return ollama.ollama_chat(body, database["answer"])
+    return ollama.ollama_chat(body, database["embedding"])
 # ------------------ CUSTOM API ------------------
 
 custom = Custom()
@@ -166,4 +166,5 @@ def cohere_summarize_text():
 # ------------------ START SERVER ------------------
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    # app.run(port=8080)
+    app.run(host="0.0.0.0", port=8080,debug=True)

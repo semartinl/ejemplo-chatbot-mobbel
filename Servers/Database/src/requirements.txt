@@ -6,4 +6,3 @@ unstructured
 langchain_community
 PyPDF2
 sentence_transformers
-torch

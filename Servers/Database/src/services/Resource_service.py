@@ -16,8 +16,6 @@ class Resource_service:
         embedding_collection = database["embedding"]
         result = resource_collection.insert_one(document_json)
         
-        
-
         chunks = load_and_split_data(pdf_path)
 
         for text in chunks:

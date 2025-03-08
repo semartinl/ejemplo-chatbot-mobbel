@@ -49,7 +49,7 @@ def extract_questions_and_answers(pdf_path):
 
 
 # 📌 Función para dividir el texto en chunks
-def split_text(text: str, chunk_size: int = 7500, chunk_overlap: int = 100) -> List[str]:
+def split_text(text: str, chunk_size: int = 1024, chunk_overlap: int = 100) -> List[str]:
     """Divide el texto en fragmentos de tamaño definido con superposición opcional."""
     chunks = []
     start = 0

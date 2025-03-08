@@ -1,0 +1,1 @@
+curl -X POST http://localhost:5000/search -H "Content-Type: application/json" --data-binary "{\"query\": \"Desde cuándo forma parte Mobbeel de Indra?\"}"
