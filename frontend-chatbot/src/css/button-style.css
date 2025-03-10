@@ -15,3 +15,7 @@
 .popover-chat button:hover{
     flex: 200%;
 }
+
+.popover-chat{
+    size: 200px;
+}

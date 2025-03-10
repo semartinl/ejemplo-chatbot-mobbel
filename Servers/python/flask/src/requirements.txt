@@ -15,3 +15,5 @@ torch
 PyPDF2
 ollama
 accelerate
+httpx
+asyncio

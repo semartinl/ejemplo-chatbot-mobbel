@@ -16,10 +16,11 @@ export default function PopOverChat() {
 
   return (
     <section className='popover-chat'>
-    {isOpen? <DeepChat
-                connect={{ url: "http://localhost:8080/ollama-chat" }}
-              /> : null}
-    <button onClick={()=> setIsOpen(!isOpen)}>{texto}</button>
+      
+      {isOpen? <DeepChat
+                  connect={{ url: "http://localhost:8080/ollama-chat" }}
+                /> : null}
+      <button onClick={()=> setIsOpen(!isOpen)}>{texto}</button>
     </section>
 
   )

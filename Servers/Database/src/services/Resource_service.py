@@ -1,6 +1,6 @@
 from bson import ObjectId
 from flask import jsonify
-from functions.PDF_funcions import load_and_split_data, read_pdf
+from functions.PDF_funcions import load_and_split_data, read_pdf, process_pdf
 from models.Resources import Resource
 from models.Embbeding import Embbeding
 from datetime import date
@@ -16,7 +16,7 @@ class Resource_service:
         embedding_collection = database["embedding"]
         result = resource_collection.insert_one(document_json)
         
-        chunks = load_and_split_data(pdf_path)
+        chunks = process_pdf(pdf_path)
 
         for text in chunks:
             embed_text = model_embedding.encode(text).tolist()

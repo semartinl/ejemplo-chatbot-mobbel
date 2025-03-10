@@ -48,8 +48,9 @@ def extract_questions_and_answers(pdf_path):
     return questions_answers
 
 
-# 📌 Función para dividir el texto en chunks
-def split_text(text: str, chunk_size: int = 1024, chunk_overlap: int = 100) -> List[str]:
+# 📌 Función para dividir el texto en chunks, teniendo en cuenta un tamaño y no las palabras. Es decir, 
+# corta las palabras si justo se termina en medio de una palabra. 
+def split_text_size(text: str, chunk_size: int = 1024, chunk_overlap: int = 100) -> List[str]:
     """Divide el texto en fragmentos de tamaño definido con superposición opcional."""
     chunks = []
     start = 0
@@ -60,11 +61,35 @@ def split_text(text: str, chunk_size: int = 1024, chunk_overlap: int = 100) -> L
     return chunks
 
 # 📌 Función para cargar y dividir datos de un PDF
+def process_pdf(file_path: str, chunk_size: int):
+    """
+    Procesa un archivo PDF y divide el texto en fragmentos de un tamaño dado.
+
+    :param file_path: Ruta del archivo PDF.
+    :param chunk_size: Número de palabras por fragmento.
+    :return: Lista de fragmentos de texto.
+    """
+    text = ""
+
+    # Leer el PDF
+    with open(file_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            text += page.extract_text() + " "
+
+    # Limpiar texto y dividir en palabras
+    words = text.split()
+
+    # Generar los fragmentos
+    chunks = [" ".join(words[i:i + chunk_size]) for i in range(0, len(words), chunk_size)]
+
+    return chunks
+
 def load_and_split_data(file_path: str) -> List[str]:
     """Carga el PDF, extrae el texto y lo divide en fragmentos."""
     content = read_pdf(file_path)  # Usa tu función ya implementada para extraer el texto
     if "Error" in content:
         return [content]  # Si hay error, devolver el mensaje en una lista
-    return split_text(content)
+    return split_text_size(content)
 
 

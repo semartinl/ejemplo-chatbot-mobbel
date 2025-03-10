@@ -4,7 +4,7 @@ from services.stabilityAI import StabilityAI
 from services.custom import Custom
 from services.openAI import OpenAI
 from services.cohere import Cohere
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from flask_cors import CORS
 import database as dbase
@@ -16,6 +16,7 @@ from services.ollama import OllamaChat
 from services.huggingFace import loginHuggingFace
 import torch
 import nltk
+import asyncio
 import pandas as pd
 # ------------------ SETUP ------------------
 
@@ -26,22 +27,22 @@ database = dbase.conexionMongoDB()
 
 # loginHuggingFace()
 # CHATBOT_MODEL = os.getenv("CHATBOT_MODEL")
-device = ("cuda" if torch.cuda.is_available() else "cpu")
-SYSTEM_PROMPT = """*Eres un asistente virtual experto en Mobbeel, una empresa especializada en verificación de identidad digital. Tu única función es responder, de manera precisa, amable y cortés, preguntas relacionadas con Mobbeel, sus soluciones y servicios. No debes responder preguntas que no estén relacionadas con la empresa.
-Tu conocimiento se basa en información sobre Mobbeel.
+# device = ("cuda" if torch.cuda.is_available() else "cpu")
+# SYSTEM_PROMPT = """*Eres un asistente virtual experto en Mobbeel, una empresa especializada en verificación de identidad digital. Tu única función es responder, de manera precisa, amable y cortés, preguntas relacionadas con Mobbeel, sus soluciones y servicios. No debes responder preguntas que no estén relacionadas con la empresa.
+# Tu conocimiento se basa en información sobre Mobbeel.
 
-Si un usuario hace una pregunta fuera de este ámbito, responde con amabilidad que solo puedes proporcionar información sobre Mobbeel y sus servicios. Usa un tono profesional, pero cercano. Asegúrate de que todas tus respuestas sean claras, concisas y útiles. Si no tienes la información exacta, evita inventar y, en su lugar, explica que no puedes responder con certeza.*"""
-CONTROLLER = DialogueController(assistant_token="<|assistant|>", system_prompt=SYSTEM_PROMPT)
+# Si un usuario hace una pregunta fuera de este ámbito, responde con amabilidad que solo puedes proporcionar información sobre Mobbeel y sus servicios. Usa un tono profesional, pero cercano. Asegúrate de que todas tus respuestas sean claras, concisas y útiles. Si no tienes la información exacta, evita inventar y, en su lugar, explica que no puedes responder con certeza.*"""
+# CONTROLLER = DialogueController(assistant_token="<|assistant|>", system_prompt=SYSTEM_PROMPT)
 
 # Descarga de recursos necesarios
-nltk.download('punkt', quiet=True)
-nltk.download('punkt_tab', quiet=True)
-nltk.download('stopwords', quiet=True)
-SEMANTIC_SEARCH = SemanticSearchEnhancer(database=database)
+# nltk.download('punkt', quiet=True)
+# nltk.download('punkt_tab', quiet=True)
+# nltk.download('stopwords', quiet=True)
+# SEMANTIC_SEARCH = SemanticSearchEnhancer(database=database)
 
 
-RESPONSE_ENGINE = ResponseGenerator()
-CHATBOT = ChatbotRAG(controller=CONTROLLER, device_setup=device,response_engine=RESPONSE_ENGINE, semantic_search=SEMANTIC_SEARCH)
+# RESPONSE_ENGINE = ResponseGenerator()
+# CHATBOT = ChatbotRAG(controller=CONTROLLER, device_setup=device,response_engine=RESPONSE_ENGINE, semantic_search=SEMANTIC_SEARCH)
 
 app = Flask(__name__)
 
@@ -68,15 +69,17 @@ ollama = OllamaChat("llama3.2")
 @app.route("/ollama-chat", methods=["POST"])
 def ollama_api_chat():
     body = request.json
-    return ollama.ollama_chat(body, database["embedding"])
+    # response = asyncio.run(ollama.ollama_chat(body, database["embedding"], SEMANTIC_SEARCH.model))
+    response= ollama.ollama_chat(body, database["embedding"])
+    return response
 # ------------------ CUSTOM API ------------------
 
 custom = Custom()
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    body = request.json
-    return custom.chat(body, CHATBOT, database["answer"])
+# @app.route("/chat", methods=["POST"])
+# def chat():
+#     body = request.json
+#     return custom.chat(body, CHATBOT, database["answer"])
 
 
 @app.route("/chat-stream", methods=["POST"])
@@ -111,10 +114,10 @@ def openai_image():
 
 huggingFace = HuggingFace()
 
-@app.route("/huggingface-conversation", methods=["POST"])
-def hugging_face_conversation():
-    body = request.json
-    return huggingFace.conversation(body, SEMANTIC_SEARCH)
+# @app.route("/huggingface-conversation", methods=["POST"])
+# def hugging_face_conversation():
+#     body = request.json
+#     return huggingFace.conversation(body, SEMANTIC_SEARCH)
 
 @app.route("/huggingface-image", methods=["POST"])
 def hugging_face_image_classification():
