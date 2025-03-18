@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.server_api import ServerApi
-from models.SemanticSearch import SemanticSearchEnhancer
 import PyPDF2
 import re
 

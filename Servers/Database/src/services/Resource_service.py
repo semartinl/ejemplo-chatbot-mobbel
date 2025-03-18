@@ -1,6 +1,7 @@
 from bson import ObjectId
 from flask import jsonify
 from functions.PDF_funcions import load_and_split_data, read_pdf, process_pdf
+from functions.text_splitter import extraer_texto_pdf_mejorado, extract_keywords, extraer_texto_con_pdfplumber, extraer_frases_chunks
 from models.Resources import Resource
 from models.Embbeding import Embbeding
 from datetime import date
@@ -8,7 +9,10 @@ from pydantic import BaseModel
 class Resource_service:
     def add_resource(self, database, body, model_embedding):
         pdf_path = body["pdf_path"]
-        text_pdf = read_pdf(pdf_path)
+
+        # text_pages = extraer_texto_pdf_mejorado(pdf_path)
+
+        text_pdf = extraer_texto_con_pdfplumber(pdf_path)
         document = Resource(id=1, content=text_pdf, createdAt=date.today().isoformat(),updatedAt=date.today().isoformat())
         document_json = document.model_dump()
         
@@ -16,10 +20,13 @@ class Resource_service:
         embedding_collection = database["embedding"]
         result = resource_collection.insert_one(document_json)
         
-        chunks = process_pdf(pdf_path)
+        chunks = extraer_frases_chunks(text_pdf)
 
         for text in chunks:
-            embed_text = model_embedding.encode(text).tolist()
+            # Se tokeniza el contenido del texto, extraen las palabras clave y se obtiene el embedding
+            text_keywords = extract_keywords(text)
+            # Se obtiene el embedding del texto mejorado con las palabras claves.
+            embed_text = model_embedding.encode(text_keywords).tolist()
             embedding_class = Embbeding(
             id=1,
             resourceId=result.inserted_id,

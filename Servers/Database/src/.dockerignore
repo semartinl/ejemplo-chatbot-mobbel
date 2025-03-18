@@ -1,0 +1,13 @@
+# Ignorar la carpeta models-ia y todo su contenido
+models-ia/
+
+# Exclusiones comunes para optimizar la imagen Docker
+node_modules/
+dist/
+build/
+*.log
+*.env
+.DS_Store
+.vscode/
+.idea/
+.git/

@@ -1,11 +1,27 @@
 __package__
 from typing import List
+import pdfplumber
 import PyPDF2
 import re
-from langchain_community.document_loaders import UnstructuredPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 def read_pdf(file_path: str) -> str:
+        """Lee un archivo PDF y devuelve su contenido formateado."""
+        text = []
+        
+        try:
+            with pdfplumber.open(file_path, "rb") as file:
+                for page in file.pages:
+                    text_page = page.extract_text()
+                    text_page = text_page.replace("\n", " ")
+                    text.append(text_page)
+                    # text.append(page.extract_text() or "")  # Extraer texto de cada página
+        except Exception as e:
+            return f"Error al leer el PDF: {str(e)}"
+        
+        return "\n\n".join(text)
+
+def read_pdf_list(file_path: str):
         """Lee un archivo PDF y devuelve su contenido formateado."""
         text = []
         
@@ -14,13 +30,13 @@ def read_pdf(file_path: str) -> str:
                 reader = PyPDF2.PdfReader(file)
                 for page in reader.pages:
                     text_page = page.extract_text()
-                    text_page = text_page.replace("\n", "")
+                    # text_page = text_page.replace("\n", " ")
                     text.append(text_page)
                     # text.append(page.extract_text() or "")  # Extraer texto de cada página
         except Exception as e:
             return f"Error al leer el PDF: {str(e)}"
         
-        return "\n".join(text).strip()
+        return text
 
 
 def extract_questions_and_answers(pdf_path):
@@ -72,9 +88,8 @@ def process_pdf(file_path: str, chunk_size: int):
     text = ""
 
     # Leer el PDF
-    with open(file_path, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        for page in reader.pages:
+    with pdfplumber.open(file_path, "rb") as file:
+        for page in file.pages:
             text += page.extract_text() + " "
 
     # Limpiar texto y dividir en palabras
@@ -92,4 +107,7 @@ def load_and_split_data(file_path: str) -> List[str]:
         return [content]  # Si hay error, devolver el mensaje en una lista
     return split_text_size(content)
 
+# split_text = process_pdf("C:\\Users\\USUARIO\\OneDrive - Universidad de Extremadura\\Escritorio\Sergio\Proyectos\\chatbot\\Ejemplo-definitivo-chatbot\\ejemplo-chatbot-mobbel\\Servers\\Database\\src\\Dossier-Mobbeel 2025.pdf", 100)
 
+
+# print(split_text[5])

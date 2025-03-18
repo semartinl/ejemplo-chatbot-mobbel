@@ -6,7 +6,7 @@ export default function CustomApi() {
     <div className="chat-container">
           <h1>CHAT CON API PERSONALIZADA</h1>
           <DeepChat
-            connect={{ url: "http://127.0.0.1:8080/chat" }}
+            connect={{ url: "http://127.0.0.1:8080/query" }}
           />
     </div>
   )

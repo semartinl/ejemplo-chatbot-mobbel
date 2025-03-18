@@ -50,3 +50,7 @@ pip install -r requirements.txt
 ```bash
 py app.py
 ```
+
+
+# CUIDADO
+En la parte del backend, sobre todo en la API de Mongo, es necesario descargar una libreria llamada "poppler" para poder leer los PDF. Para ello, es necesario descargar el archivo de su correspondiente repositorio de Github. 

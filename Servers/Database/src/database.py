@@ -2,9 +2,6 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.server_api import ServerApi
 import PyPDF2
-from langchain_community.document_loaders import PyPDFLoader
-
-from pptx import Presentation
 import re
 
 

@@ -66,7 +66,7 @@ def add_resource():
     return jsonify({"message": "Document added successfully"})
 
 # Rutas de la API
-@app.route("/resource/<resource_id>", methods=["GET"])
+@app.route("/resources/<resource_id>", methods=["GET"])
 def get_resource_route(resource_id):
     return resource_service.get_resource(database,resource_id)
 
@@ -74,12 +74,12 @@ def get_resource_route(resource_id):
 def get_all_resources_route():
     return resource_service.get_all_resources(database)
 
-@app.route("/resource/<resource_id>", methods=["PUT"])
+@app.route("/resources/<resource_id>", methods=["PUT"])
 def update_resource_route(resource_id):
     body = request.json
     return resource_service.update_resource(database,resource_id, body)
 
-@app.route("/resource/<resource_id>", methods=["DELETE"])
+@app.route("/resources/<resource_id>", methods=["DELETE"])
 def delete_resource_route(resource_id):
     return resource_service.delete_resource_by_id(database,resource_id)
 

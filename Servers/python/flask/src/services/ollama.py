@@ -19,7 +19,8 @@ def create_context_resource(results: List[Dict], max_results: int = 3) -> str:
 class OllamaChat:
     def __init__(self, model):
         self.model = model
-        self.client = Client("http://ollama:11434")
+        self.client = Client("http://localhost:11434")
+        # self.client = Client("http://ollama:11434")
         self.client.pull(model)
         # self.chat = self.client.create(model='example', from_=model, system="You are a virtual assistant from Mobbeel company. Dont answer any personal questions.")
         # ollama.pull(model='example', from_=model)
@@ -29,7 +30,8 @@ class OllamaChat:
         consulta = body["messages"][-1]["text"]
 
         print(f"Consulta: {consulta}")
-        semantic_search = requests.post("http://api-mongo:5000/search", json={"query": consulta, "collection": "embedding"})
+        semantic_search = requests.post("http://localhost:5000/search", json={"query": consulta, "collection": "embedding"})
+        # semantic_search = requests.post("http://api-mongo:5000/search", json={"query": consulta, "collection": "embedding"})
         # async with httpx.AsyncClient() as client:
         #     semantic_search = await client.post(
         #         "http://api-mongo:5000/search", 
@@ -52,7 +54,7 @@ class OllamaChat:
             return {"text": respuesta}
         else:
             context = create_context_resource(semantic_search, max_results=3)
-            augmented_prompt = f"""A partir de la siguiente información del contexto, ¿podrías responder a la query del usuario? Respondela unicamente si se trata de Mobbeel.
+            augmented_prompt = f"""A partir de la siguiente información del contexto, ¿podrías responder a la query del usuario?
     Contexto:
     {context}
     Query:

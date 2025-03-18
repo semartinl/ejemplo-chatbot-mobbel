@@ -1,8 +1,8 @@
 pymongo
 flask
 flask_cors
-python-pptx
-unstructured
-langchain_community
+pydantic
 PyPDF2
 sentence_transformers
+unstructured
+pdfplumber
