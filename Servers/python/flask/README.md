@@ -1,3 +1,8 @@
+## !AVISOS IMPORTANTES!
+Si vas a utilizarlo en local, se necesita que se tenga instalado en el sistema `ollama`, un framework de Meta para cargar modelos en local. Para instalarlo, pincha en el siguiente enlace para descargarlo. [Ollama link](https://ollama.com/download) 
+
+Si deseas utilizar un Docker para ejecutar dicho framework, es necesario que se sigan las instrucciones para levantar el sistema mediante Dockers. Estas instrucciones se encuentran dentro de la carpeta raiz del proyecto. Se ha implementado un `docker-compose.yml` para realizar correctamente el despliegue sin problemas.
+
 ![Deep Chat](../../../assets/readme/flask-connect.png)
 
 This is an example Flask server template that can be used to communicate with the [Deep Chat](https://www.npmjs.com/package/deep-chat) component. It includes a variety of endpoints that can be used to host your own service or act as a proxy for the following AI APIs - [OpenAI](https://openai.com/blog/openai-api), [HuggingFace](https://huggingface.co/docs/api-inference/index), [StabilityAI](https://stability.ai/), [Cohere](https://docs.cohere.com/docs).
@@ -18,6 +23,7 @@ Navigate to the `src` directory and run the following command to install the req
 
 ```
 pip install flask flask-cors load_dotenv
+pip install -r requirements.txt
 ```
 
 Run the project:
