@@ -2,7 +2,9 @@
 En este repositorio, se van a poder encontrar 2 carpetas:
 1. La carpeta del frontend (fronted-chatbot)
 2. La API para generar las respuestas del modelo.
+   2.1. La API para gestionar las peticiones directas a la base de datos. Se utiliza Python con Flask y MongoDB
 
+   2.2. La API para gestionar las generaciones del chatbot. Se utiliza Python con Flask y la libreria de SentenceTransformer para el modelo de embedding y Ollama para el modelo de generación de texto.
 ## EJECUCIÓN 
 ### ANTES DE EJECUTAR
 Antes que nada, es necesario que se modifique el docker compose, en el apartado de environment, del servicios de la API para que sea capaz de hacer las llamadas correspondientes a la API de Hugging Face. Para ello, se deberá de cambiar la propieadad de environment siguiente por vuestra correspondiente API key de HF:
@@ -10,6 +12,10 @@ Antes que nada, es necesario que se modifique el docker compose, en el apartado 
 environment:
       - HUGGING_FACE_API_KEY="tu-api-key"
 ```
+Además, si deseas ejecutar el proyecto todo en local o en la misma máquina, te tienes que asegurar que tienes instalado la aplicación de `Ollama', ya que la comunicación con nuestro modelo se realizará a partir de esta.
+
+Si deseas ejecutar en el Docker a parte, sigue las instrucciones que vienen a continuación.
+
 ### PARA EMPEZAR LA EJECUCIÓN
 Se ha establecido un Docker para ambos apartados, tanto para la API como para el diseño web. Para ejecutarlo todo, en la carpeta raiz, ejecuta el siguiente comando:
 ```bash
