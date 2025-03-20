@@ -45,7 +45,8 @@ En la parte de la API, se ha utilizado Flask con Python. Para poder ejecutar la 
 ```bash
 pip install -r requirements.txt
 ```
-3. Finalmente, ejecutar el siguiente comando en la carpeta donde se encuentra el archivo principal "app.py":
+3. Hacer lo mismo del paso anterior pero en la carpeta de "Servers/Database"
+4. Finalmente, ejecutar el siguiente comando en la carpeta donde se encuentra el archivo principal "app.py":
 
 ```bash
 py app.py
