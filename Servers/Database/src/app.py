@@ -18,8 +18,9 @@ database = dbase.conexionMongoDB()
 collection_qa = database["answer"]
 
 # Carga del modelo de embeddings
-model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
+# model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
 
+model = SentenceTransformer("nomic-ai/nomic-embed-text-v2-moe", trust_remote_code=True)
 def generate_embedding(text):
     return model.encode(text).tolist()
 

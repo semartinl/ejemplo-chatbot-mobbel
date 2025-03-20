@@ -1,7 +1,8 @@
 from typing import Dict, List
 from flask import jsonify
+from models.QA_logs import Log, save_logs_to_csv, append_log_to_json, Score
+import pandas as pd
 import ollama
-import httpx
 import asyncio
 from ollama import ChatResponse, Client
 import requests
@@ -31,22 +32,9 @@ class OllamaChat:
 
         print(f"Consulta: {consulta}")
         semantic_search = requests.post("http://localhost:5000/search", json={"query": consulta, "collection": "embedding"})
-        # semantic_search = requests.post("http://api-mongo:5000/search", json={"query": consulta, "collection": "embedding"})
-        # async with httpx.AsyncClient() as client:
-        #     semantic_search = await client.post(
-        #         "http://api-mongo:5000/search", 
-        #         json={"query": consulta, "collection": "embedding"}
-        #     )
-
-        # while(not semantic_search.ok):
-        #     print("Esperando respuesta de la consulta...")
-        #     semantic_search = requests.post("http://api-mongo:5000/search", json={"query": consulta, "collection": "embedding"})
-        
-
-        #---------------------------------------------------
         
         semantic_search = semantic_search.json()
-        print(f"Semantic search: {semantic_search}")
+        # print(f"Semantic search: {semantic_search}")
         if max(semantic_search, key=lambda x: x["score"])["score"] < 0.5:
             print("No se han encontrado resultados relacionados")
             #--------------------------------MODIFICAR ESTA RESPUESTA PARA QUE SEA MÁS AMIGABLE--------------------------------
@@ -61,5 +49,19 @@ class OllamaChat:
     {consulta}"""
             respuesta:ChatResponse = self.client.chat(self.model,messages=[{'role': 'user', 'content': augmented_prompt}])
             print(f"Respuesta: {respuesta.message.content}")
+
+        list_scores = []
+        for result in semantic_search:
+            list_scores.append(Score(score=result["score"], name="Vector Search Score"))
+        log = Log(contexto=context, query=consulta, model_answer=respuesta.message.content, scores=list_scores)
+
+        # Guardar log en CSV
+        # save_logs_to_csv(log, filename="logs.csv")
+
+        # Guardar log en JSON
+        append_log_to_json(log, filename="logs.json")
+        
+
+        
         # ollama.push(model='example', to=self.model)
         return {"text": respuesta.message.content}

@@ -9,11 +9,14 @@ from typing import List
 from pydantic import BaseModel
 import json
 class Embbeding:
-    def __init__(self, id: str, resourceId: str, content: str, embedding: List[int]):
+    def __init__(self, id: str, resourceId: str, content: str, embedding_text: List[int], embedding_keywords:List[int]):
         self.id = id
         self.resourceId = resourceId
         self.content = content
-        self.embedding = embedding
+        # self.keys_embedding = embedding
+        # self.keys = 
+        self.embedding_text= embedding_text
+        self.embedding_keywords = embedding_keywords
 
     def to_json(self):
         """Convierte el objeto Embbeding a un diccionario y luego lo serializa a JSON."""

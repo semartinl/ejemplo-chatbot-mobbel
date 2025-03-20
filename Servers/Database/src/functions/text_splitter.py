@@ -44,7 +44,7 @@ def extraer_texto_con_pdfplumber(pdf_path):
     
     return "\n\n".join(texto_extraido)
 
-def extraer_palabras_chunks(texto: str, max_length: int = 1000, contexto:int = 100) -> list:
+def extraer_palabras_chunks(texto: str, max_length: int = 500, contexto:int = 100) -> list:
     """Divide el texto en chunks de un tamaño máximo de "max_length" palabras.
 
     :param texto: Texto a dividir.
@@ -65,9 +65,8 @@ def extraer_palabras_chunks(texto: str, max_length: int = 1000, contexto:int = 1
 
     return chunks
 
-def extraer_frases_chunks(texto: str, max_length: int = 1000, contexto:int = 100) -> list:
-    """Divide el texto en chunks de un tamaño máximo. Aun falta por implementar el contexto.
-    
+def extraer_frases_chunks(texto: str, max_length: int = 100, contexto:int = 50) -> list:
+    """Divide el texto en chunks de un tamaño máximo. Se mantiene el contexto de las palabras.
     :param texto: Texto a dividir.
     :param max_length: Longitud máxima de los chunks.
     :param contexto: Longitud de contexto para dividir el texto.
@@ -76,12 +75,13 @@ def extraer_frases_chunks(texto: str, max_length: int = 1000, contexto:int = 100
     frases = texto.split(".")
     chunk = ""
     for frase in frases:
-        if len(chunk) + len(frase) < max_length:
+        if len(chunk) + len(frase) < (max_length-contexto):
             
             chunk += frase + "."
         else:
             chunks.append(chunk.replace("\n"," ").strip())
-            chunk = frase + "."
+            chunk_palabras = chunk.split()
+            chunk = " ".join(chunk_palabras[-contexto:]) + frase + "."
     chunks.append(chunk.strip())
 
     return chunks
@@ -93,7 +93,10 @@ def extract_keywords(text: str) -> str:
     tokens = word_tokenize(text.lower())
     keywords = [word for word in tokens if word not in stop_words]
     return ' '.join(keywords)
+
 # split_text = extraer_texto_con_pdfplumber("C:\\Users\\USUARIO\\Desktop\\Sergio\\Docs-trabajo\\Dossier-Mobbeel 2025.pdf")
 
+# frases_chunks = extraer_frases_chunks(split_text, max_length=400)
 
-# print(extraer_frases_chunks(split_text, max_length=1000)[-3:-1])
+# print(frases_chunks[0])
+# print(extract_keywords(frases_chunks[0]))

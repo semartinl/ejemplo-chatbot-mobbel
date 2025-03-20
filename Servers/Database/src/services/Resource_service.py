@@ -26,13 +26,16 @@ class Resource_service:
             # Se tokeniza el contenido del texto, extraen las palabras clave y se obtiene el embedding
             text_keywords = extract_keywords(text)
             # Se obtiene el embedding del texto mejorado con las palabras claves.
-            embed_text = model_embedding.encode(text_keywords).tolist()
+            embed_text = model_embedding.encode(text).tolist()
+            embed_keywords = model_embedding.encode(text_keywords).tolist()
             embedding_class = Embbeding(
             id=1,
             resourceId=result.inserted_id,
             content=text,
-            embedding=embed_text
+            embedding_text=embed_text,
+            embedding_keywords=embed_keywords
         )
+            
             embedding_json = embedding_class.__dict__
             embedding_collection.insert_one(embedding_json)
         
